@@ -8,7 +8,7 @@ class SVDMatrix < Matrix
   def initialize(m, n)
     @row_size = m
     @rows = Array.new(m)
-    @column_size = n
+    @column_count = n
     m.times {|i| @rows[i] = Array.new(n) {0} }
   end
   
@@ -34,7 +34,7 @@ class SVDMatrix < Matrix
   def decompose(reduce_dimensions_to = nil)
     input_array = []
 
-    if @row_size >= @column_size
+    if @row_size >= @column_count
 
       @rows.each {|row| input_array += row}
       u_array, w_array, v_array = SVD.decompose(input_array, row_size, column_size)
@@ -55,9 +55,9 @@ class SVDMatrix < Matrix
 
     else
 
-      transpose = SVDMatrix.new( @column_size, @row_size )
+      transpose = SVDMatrix.new( @column_count, @row_size )
       @rows = @rows.transpose
-      for i in 0..@column_size-1 
+      for i in 0..@column_count-1 
         transpose.set_row(i, @rows[i].to_a )
       end
       v , w, u = transpose.decompose( reduce_dimensions_to || @row_size )
